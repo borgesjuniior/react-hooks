@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useMemo, useState } from 'react';
 
 interface User {
@@ -8,14 +9,23 @@ interface User {
 
 function App() {
   // Retorna um valor e uma função para atualizar o valor.
-  const [ user, setUser ] = useState<[User]>(); 
+  const [ users, setUser ] = useState<[User]>(); 
   
   /**
   * O useMemo só recuperará o valor memoizado quando o array receber uma atualização. 
   * Esta otimização ajuda a evitar cálculos caros em cada renderização.
   * O primeiro parâmetro é a função a ser disparada e o segundo o array de depedências
   */
-  const names = useMemo(() => user?.map(user => user.name).join(','), [user]);
+  const names = useMemo(() => users?.map(user => user.name).join(','), [users]);
+
+  /**
+   * Retorna um callback memoizado.
+   * Recebe como argumentos, um callback e um array. 
+   * useCallback retornará uma versão memoizada do callback que só muda 
+   * se uma das entradas tiverem sido alteradas.
+   */
+
+  const greeting = useCallback((user: User) => alert(`Hello ${user.name}`), [])
 
 
 
@@ -26,14 +36,9 @@ function App() {
     setUser(data);
   }
 
-  return (  
-    <>
-    <button onClick={loadData} type="submit">Carregar dados</button>
-    <li>{user?.login}</li>
-    {user && <img src={user?.avatar_url} alt="Foto" />}
-    
-    </>
-  );
+  return (
+    <h1>React Hooks</h1>
+  )
 }
 
 export default App;
